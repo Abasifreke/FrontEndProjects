@@ -1,18 +1,21 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { v4 as uuidV4 } from 'uuid';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const BudgetsContext = React.createContext();
-
 
 export const useBudgets = () => {
     return useContext(BudgetsContext);
 }
 
+export const UNCATEGORIZED_BUDGET_ID = 'Uncategorized'
+
 export const BudgetsProvider = ({ children }) => {
-    const [budgets, setBudgets] = useState([])
-    const [expenses, setExpenses] = useState([]);
+    const [budgets, setBudgets] = useLocalStorage("budgets", [])
+    const [expenses, setExpenses] = useLocalStorage("expenses", []);
 
     function getBudgetExpenses(budgetId) {
+        console.log(expenses.filter(expense => expense.budgetId === budgetId));
         return expenses.filter(expense => expense.budgetId === budgetId);
     }
 
@@ -20,7 +23,8 @@ export const BudgetsProvider = ({ children }) => {
         setBudgets(prevBudgets => {
             if (prevBudgets.find(budget => budget.name === name)) {
                 //TODO: add error
-                return alert("same buget already exists");
+                alert("same buget already exists");
+                return prevBudgets;
             }
             return [...prevBudgets, { id: uuidV4(), name, max }]
         });
