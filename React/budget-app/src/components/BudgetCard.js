@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { currencyFormatter } from '../utils';
 
-export default function BudgetCard({ name, amount, max, gray, hideButtons, onAddExpenseClick }) {
+export default function BudgetCard({ name, amount, max, gray, hideAddButton, hideViewButton, onAddExpenseClick, onViewExpenseClick }) {
   const classNames = [];
   if (amount > max) {
     classNames.push('bg-danger', 'bg-opacity-10');
@@ -24,10 +24,10 @@ export default function BudgetCard({ name, amount, max, gray, hideButtons, onAdd
           </div>
         </Card.Title>
         {max && <ProgressBar className='rounded-pill mb-4' variant={getProgressBarVariant(amount, max)} min={0} max={max} now={amount} />}
-        {!hideButtons && <Stack direction='horizontal' gap='2'>
-          <Button variant='outline-primary' className='me-2 ms-auto' onClick={onAddExpenseClick}>Add Expense</Button>
-          <Button variant='outline-secondary'>View Expenses</Button>
-        </Stack>}
+        <Stack direction='horizontal' gap='2'>
+          {!hideAddButton && <Button variant='outline-primary' className='me-2 ms-auto' onClick={onAddExpenseClick}>Add Expense</Button>}
+          {!hideViewButton && <Button variant='outline-secondary' onClick={onViewExpenseClick}>View Expenses</Button>}
+        </Stack>
       </Card.Body>
     </Card>
   )

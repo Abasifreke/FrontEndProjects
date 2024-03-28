@@ -4,21 +4,25 @@ import Button from 'react-bootstrap/Button';
 import BudgetCard from "./components/BudgetCard";
 import AddBudgetModal from "./components/AddBudgetModal";
 import { useState } from 'react';
-import { useBudgets } from "./contexts/BudgetsContext";
+import { UNCATEGORIZED_BUDGET_ID, useBudgets } from "./contexts/BudgetsContext";
 import AddExpenseModal from "./components/AddExpenseModal";
 import UncategorizedBudgetCard from "./components/UncategorizedBudgetCard";
 import TotalBudgetCard from "./components/TotalBudgetCard";
+import ViewExpensesModal from "./components/ViewExpensesModal";
 
 function App() {
   const [showAddBudgetModal, setShowAddBudgetModal] = useState(false);
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
+  // const [showViewExpenseModal, setShowViewExpenseModal] = useState(false);
   const [addExpenseModalBudgetId, setAddExpenseModalBudgetId] = useState();
+  const [viewExpenseModalBudgetId, setViewExpenseModalBudgetId] = useState();
   const { budgets, getBudgetExpenses } = useBudgets();
 
   const openAddExpenseModal = (budgetId) => {
     setAddExpenseModalBudgetId(budgetId);
     setShowAddExpenseModal(true);
   }
+
   return <>
     <Container className="my-4">
       <Stack direction="horizontal" gap='2' className='mb-4'>
@@ -30,13 +34,21 @@ function App() {
         <TotalBudgetCard />
         {budgets.map(budget => {
           const amount = getBudgetExpenses(budget.id).reduce((total, expense) => total + expense.amount, 0);
-          return <BudgetCard key={budget.id} name={budget.name} amount={amount} max={budget.max} onAddExpenseClick={() => openAddExpenseModal(budget.id)} ></BudgetCard>;
+          return <BudgetCard
+            key={budget.id}
+            name={budget.name}
+            amount={amount}
+            max={budget.max}
+            onAddExpenseClick={() => openAddExpenseModal(budget.id)}
+            onViewExpenseClick={() => setViewExpenseModalBudgetId(budget.id)}
+          />;
         })}
-        <UncategorizedBudgetCard />
+        <UncategorizedBudgetCard onViewExpenseClick={() => setViewExpenseModalBudgetId(UNCATEGORIZED_BUDGET_ID)} />
       </div>
     </Container>
     <AddBudgetModal show={showAddBudgetModal} handleClose={() => setShowAddBudgetModal(false)} />
     <AddExpenseModal show={showAddExpenseModal} defaultBudgetId={addExpenseModalBudgetId} handleClose={() => setShowAddExpenseModal(false)} />
+    <ViewExpensesModal budgetId={viewExpenseModalBudgetId} handleClose={() => setViewExpenseModalBudgetId()} />
   </>
 }
 
