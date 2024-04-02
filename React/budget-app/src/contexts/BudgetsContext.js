@@ -32,7 +32,7 @@ export const BudgetsProvider = ({ children }) => {
     function deleteBudget(budgetId) {
         setExpenses(prevExpenses => {
             return prevExpenses.map(expense => {
-                if (expense.budgetId != budgetId) return expense;
+                if (expense.budgetId !== budgetId) return expense;
 
                 return { ...expense, budgetId: UNCATEGORIZED_BUDGET_ID }
             })

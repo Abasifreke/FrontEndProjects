@@ -30,8 +30,10 @@ function App() {
         <Button variant="primary" onClick={() => setShowAddBudgetModal(true)}> Add Budget</Button>
         <Button variant="outline-primary" onClick={openAddExpenseModal}> Add Expense</Button>
       </Stack>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1rem", alignItems: "flex-start" }} >
+      <div className="mb-4" >
         <TotalBudgetCard />
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1rem", alignItems: "flex-start" }} >
         {budgets.map(budget => {
           const amount = getBudgetExpenses(budget.id).reduce((total, expense) => total + expense.amount, 0);
           return <BudgetCard
